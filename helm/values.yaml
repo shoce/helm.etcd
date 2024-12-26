@@ -1,0 +1,8 @@
+---
+
+# https://quay.io/coreos/etcd
+# https://github.com/etcd-io/etcd
+ImageNameEtcd: quay.io/coreos/etcd
+
+RootPassword: ''
+

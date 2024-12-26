@@ -1,0 +1,74 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: etcd
+  labels:
+    app: etcd
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: etcd
+  template:
+    metadata:
+      labels:
+        app: etcd
+
+    spec:
+
+      volumes:
+        - name: etcd
+          hostPath:
+            path: /etcd/
+            type: DirectoryOrCreate
+
+      containers:
+
+        - name: etcd
+          image: {{ $.Values.ImageNameEtcd }}:{{ $.Chart.AppVersion }}
+          imagePullPolicy: IfNotPresent
+
+          volumeMounts:
+            - mountPath: /etcd/
+              name: etcd
+
+          ports:
+            - containerPort: 443
+              name: client
+            - containerPort: 8443
+              name: metrics
+
+          command:
+            - /usr/local/bin/etcd
+          args:
+            - --name=etcd
+            - --data-dir=/etcd/
+            - --auto-tls
+            - --listen-client-urls=https://0.0.0.0:443
+            - --advertise-client-urls=https://etcd-0.etcd.{{ $.Release.Namespace }}.svc.cluster.local:443
+            - --listen-metrics-urls=https://0.0.0.0:8443
+
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: 8443
+              scheme: HTTPS
+            initialDelaySeconds: 3
+            periodSeconds: 5
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 30
+
+          livenessProbe:
+            httpGet:
+              path: /livez
+              port: 8443
+              scheme: HTTPS
+            initialDelaySeconds: 3
+            periodSeconds: 5
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
+
+

@@ -1,0 +1,10 @@
+apiVersion: v2
+name: helm.etcd
+description: Helm chart for single instance etcd
+type: application
+#version: 1.0.0
+version: __VERSION__
+# https://quay.io/repository/coreos/etcd/
+appVersion: v3.5.17
+home: https://github.com/shoce/helm.etcd/tree/main/helm/
+
