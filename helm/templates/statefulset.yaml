@@ -46,7 +46,7 @@ spec:
             - --data-dir=/etcd/
             - --auto-tls
             - --listen-client-urls=https://0.0.0.0:443
-            - --advertise-client-urls=https://etcd-0.etcd.{{ $.Release.Namespace }}.svc.cluster.local:443
+            - --advertise-client-urls=https://etcd.{{ $.Release.Namespace }}.svc.cluster.local:443
             - --listen-metrics-urls=https://0.0.0.0:8443
 
           readinessProbe:
